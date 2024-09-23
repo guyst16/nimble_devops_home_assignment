@@ -46,6 +46,9 @@ jobs:
     - name: Terraform Output
       run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
+    - name: test
+      run: cat kubeconfig
+
     # Upload the kubeconfig file for using it later
     - uses: actions/upload-artifact@master
       with:
