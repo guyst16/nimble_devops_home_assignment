@@ -88,8 +88,8 @@ jobs:
     - name: Terraform output KubeConfig
       run: |
         output_json=$(terraform output -json kubernetes-cluster-prod-1-output)
-        test=$(echo "$output_json" | jq .)
-        echo $test
+        # test=$(echo "$output_json" | jq .)
+        # echo $test
 
     - name: test
       run: tail kubernetes-cluster-prod-1-output
