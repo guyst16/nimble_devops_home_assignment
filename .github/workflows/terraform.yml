@@ -88,8 +88,11 @@ jobs:
     - name: Terraform output KubeConfig
       run: terraform output -json kubernetes-cluster-prod-1-output > kubernetes-cluster-prod-1-output
 
-    - name: Test
-      run: cat kubernetes-cluster-prod-1-output | jq
+    - name: Extract kubeconfig file
+      run: jq .raw_config -r kubernetes-cluster-prod-1-output > kubeconfig
+
+    - name: test
+      run: cat kubeconfig
     
     
     
