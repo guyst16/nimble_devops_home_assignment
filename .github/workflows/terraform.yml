@@ -89,7 +89,7 @@ jobs:
       run: terraform output -json kubernetes-cluster-prod-1-output > kubernetes-cluster-prod-1-output
 
     - name: Test
-      run: cat kubernetes-cluster-prod-1-output
+      run: cat kubernetes-cluster-prod-1-output | jq
     
     
     
