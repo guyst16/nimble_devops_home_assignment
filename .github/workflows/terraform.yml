@@ -87,13 +87,7 @@ jobs:
       run: terraform refresh
 
     - name: Terraform Output
-      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config
-
-    - name: test
-      run: echo $output_json
-
-    - name: Extract kubeconfig file
-      run: jq .raw_config -r kubernetes-cluster-prod-1-output > kubeconfig
+      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
     - name: test
       run: cat kubeconfig
