@@ -47,7 +47,7 @@ jobs:
       run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
     - name: test
-      run: cat kubeconfig
+      run: pwd
 
     # Upload the kubeconfig file for using it later
     - uses: actions/upload-artifact@master
