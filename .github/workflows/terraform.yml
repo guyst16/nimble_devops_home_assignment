@@ -83,7 +83,8 @@ jobs:
       run: terraform fmt -check
 
     - name: Terraform output KubeConfig
-      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
+      run: |
+        terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
     - name: Test
       run: cat kubeconfig
