@@ -83,6 +83,7 @@ jobs:
     - name: Terraform Refresh2
       env:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
+        TF_LOG: DEBUG
       run: terraform plan
 
     # Refresh outputs and get data
