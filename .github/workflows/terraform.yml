@@ -79,16 +79,6 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    - name: test
-      run: ls -la
-
-    # Refresh outputs and get data
-    - name: Terraform Refresh2
-      env:
-        TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
-        TF_LOG: DEBUG
-      run: terraform plan --var-file=terraform.tfvars
-
     # Refresh outputs and get data
     - name: Terraform Refresh
       env:
@@ -96,7 +86,7 @@ jobs:
       run: terraform refresh
 
     - name: Terraform output KubeConfig
-      run: terraform output -json kubernetes-cluster-prod-1-output # | jq -r .raw_config > kubeconfiga
+      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
     - name: Test
       run: cat kubeconfig
