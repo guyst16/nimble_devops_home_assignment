@@ -79,6 +79,9 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
+    - name: test
+      run: ls -la
+
     # Refresh outputs and get data
     - name: Terraform Refresh2
       env:
