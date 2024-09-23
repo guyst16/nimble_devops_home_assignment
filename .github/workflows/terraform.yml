@@ -85,11 +85,8 @@ jobs:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
       run: terraform refresh
 
-    - name: Terraform output KubeConfig
-      run: |
-        output_json=$(terraform output -json kubernetes-cluster-prod-1-output)
-        # test=$(echo "$output_json" | jq .)
-        # echo $test
+    - name: Terraform Output
+      run: terraform output -json kubernetes-cluster-prod-1-output | jq
 
     - name: test
       run: echo $output_json
