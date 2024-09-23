@@ -79,26 +79,11 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-        # Refresh outputs and get data
-    - name: Terraform Refresh1
-      env:
-        DO_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      run: echo "$DO_TOKEN" > testfile
-
-    - name: testt
-      run: cat testfile
-      
-      # Refresh outputs and get data
-    - name: Terraform Refresh2
-      env:
-        DO_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      run: terraform plan -var="do_token=$DO_TOKEN"
-
     # Refresh outputs and get data
     - name: Terraform Refresh
       env:
-        DO_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      run: terraform refresh -var="do_token=$Env:DO_TOKEN"
+        TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
+      run: terraform refresh
 
     - name: Terraform output KubeConfig
       run: terraform output -json kubernetes-cluster-prod-1-output # | jq -r .raw_config > kubeconfiga
