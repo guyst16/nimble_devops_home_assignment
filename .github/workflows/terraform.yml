@@ -92,7 +92,7 @@ jobs:
         # echo $test
 
     - name: test
-      run: tail kubernetes-cluster-prod-1-output
+      run: echo $output_json
 
     - name: Extract kubeconfig file
       run: jq .raw_config -r kubernetes-cluster-prod-1-output > kubeconfig
