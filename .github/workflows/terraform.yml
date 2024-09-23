@@ -86,7 +86,7 @@ jobs:
       run: terraform refresh
 
     - name: Terraform output KubeConfig
-      run: terraform output -json kubernetes-cluster-prod-1-output > kubernetes-cluster-prod-1-output
+      run: terraform output -json kubernetes-cluster-prod-1-output
 
     - name: test
       run: tail kubernetes-cluster-prod-1-output
