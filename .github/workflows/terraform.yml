@@ -81,7 +81,9 @@ jobs:
 
     # Refresh outputs and get data
     - name: Terraform Refresh
-      run: terraform refresh
+      env:
+        DO_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      run: terraform refresh -var="do_token=$DO_TOKEN"
 
     - name: Terraform output KubeConfig
       run: terraform output -json kubernetes-cluster-prod-1-output # | jq -r .raw_config > kubeconfiga
