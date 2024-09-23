@@ -47,13 +47,13 @@ jobs:
       run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
     - name: test
-      run: pwd
+      run: file kubeconfig
 
     # Upload the kubeconfig file for using it later
     - uses: actions/upload-artifact@master
       with:
         name: kubeconfig_file
-        path: /Terraform/kubeconfig
+        path: kubeconfig
 
   deploy_app:
     name: "deploy_app"
