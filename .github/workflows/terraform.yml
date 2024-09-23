@@ -84,7 +84,7 @@ jobs:
       env:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
         TF_LOG: DEBUG
-      run: terraform plan
+      run: terraform plan --var-file=terraform.tfvars
 
     # Refresh outputs and get data
     - name: Terraform Refresh
