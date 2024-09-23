@@ -79,8 +79,12 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
+    # Refresh outputs and get data
+    - name: Terraform Refresh
+      run: terraform refresh
+
     - name: Terraform output KubeConfig
-      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfiga
+      run: terraform output -json kubernetes-cluster-prod-1-output # | jq -r .raw_config > kubeconfiga
 
     - name: Test
       run: cat kubeconfig
