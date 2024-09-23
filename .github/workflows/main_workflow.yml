@@ -42,9 +42,11 @@ jobs:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
       run: terraform refresh
 
+    # Get the kubeconfig file of the k8s cluster
     - name: Terraform Output
       run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
 
+    # Upload the kubeconfig file for using it later
     - uses: actions/upload-artifact@master
       with:
         name: kubeconfig_file
@@ -60,3 +62,16 @@ jobs:
       run:
         working-directory: ./Resources
         shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4      
+
+    # Pull the kubeconfig file for using it
+    - uses: actions/download-artifact@master
+      with:
+        name: kubeconfig_file
+        path: ./kubeconfig
+
+    
