@@ -86,8 +86,7 @@ jobs:
       run: terraform refresh
 
     - name: Terraform output KubeConfig
-      run: |
-        terraform output -json kubernetes-cluster-prod-1-output | echo hi # jq # -r .raw_config > kubeconfig
+      run: jq -r .raw_config <<< $(terraform output -json kubernetes-cluster-prod-1-output) > kubeconfig
 
     - name: Test
       run: cat kubeconfig
