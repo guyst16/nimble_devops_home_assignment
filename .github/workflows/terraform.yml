@@ -83,7 +83,7 @@ jobs:
     - name: Terraform Refresh1
       env:
         DO_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      run: echo "do_token=$DO_TOKEN" > testfile
+      run: echo "do_token=$Env:DO_TOKEN" > testfile
 
     - name: testt
       run: cat testfile
