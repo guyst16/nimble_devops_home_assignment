@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nimblewaywebapp
+  name: nimblewaywebapp
+  namespace: nimblewaywebapp
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nimblewaywebapp

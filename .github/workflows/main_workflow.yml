@@ -1,0 +1,160 @@
+name: 'Deploy App'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  kubeconfig_job:
+    name: 'kubeconfig_job'
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        working-directory: ./Terraform
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        terraform_wrapper: false
+
+    # Install doctl
+    - name: Install doctl
+      run: sudo snap install doctl
+
+    # Authenticate doctl using the DigitalOcean API token
+    - name: Authenticate with doctl
+      env:
+        DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      run: doctl auth init -t $DIGITALOCEAN_ACCESS_TOKEN
+
+    # Get prod-1 cluster id
+    - name: Get cluster id
+      run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq -r .[].id)"  >> "$GITHUB_ENV"
+    
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Import K8S cluster to terraform
+    - name: Terraform Import
+      env:
+        TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
+      run: terraform import -var-file=terraform.tfvars digitalocean_kubernetes_cluster.kubernetes-cluster-prod-1 $cluster_id
+
+    # Get the kubeconfig file of the k8s cluster
+    - name: Terraform Output
+      run: terraform output -json kubernetes-cluster-prod-1-output | jq -r .raw_config > kubeconfig
+
+    # Upload the kubeconfig file for using it later
+    - name: Upload kubeconfig artifcat
+      uses: actions/upload-artifact@v4
+      with:
+        name: kubeconfig_file
+        path: ./Terraform/kubeconfig
+
+  create_image_job:
+    name: "create_image_job"
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        working-directory: ./Docker_resources
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: Docker_resources
+        push: true
+        tags: nimblewayhomeassignment/nimblewayhomeassignment:latest
+
+  deploy_app_job:
+    name: "deploy_app_job"
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [kubeconfig_job, create_image_job]
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        working-directory: ./Kubernetes_resources
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Pull the kubeconfig file for using it
+    - name: Download kubeconfig artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: kubeconfig_file
+        path: .
+
+    - name: Read Kubeconfig file content and set as environment variable
+      run: |
+          FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
+          echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
+
+
+    # Apply all resources to the K8S cluster
+    - name: Apply resources
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      with:
+        args: apply -f Kubernetes_resources
+        max_attempts: 3
+        retry_on: error
+
+    # Rollout deployment incase its already deployed
+    - name: Rollout deployment
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      with:
+        args: rollout restart deployment -n nimblewaywebapp nimblewaywebapp
+        max_attempts: 3
+        retry_on: error
+
+    - name: Check the deployed service URL
+      uses: jtalk/url-health-check-action@v4
+      with:
+        url: http://webapp.nimbleassignment.com/
+        max-attempts: 10
+        retry-delay: 5s

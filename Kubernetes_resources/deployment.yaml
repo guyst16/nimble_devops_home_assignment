@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nimblewaywebapp
+  name: nimblewaywebapp
+  namespace: nimblewaywebapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nimblewaywebapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nimblewaywebapp
+    spec:
+      containers:
+      - image: nimblewayhomeassignment/nimblewayhomeassignment:latest
+        imagePullPolicy: Always
+        name: nimblewayhomeassignment
+        ports:
+        - containerPort: 8080
+        resources: {}
