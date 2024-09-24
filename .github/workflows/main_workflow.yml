@@ -40,7 +40,7 @@ jobs:
     - name: Terraform Refresh
       env:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
-      run: terraform refresh
+      run: terraform refresh --var-file=terraform.tfvars
 
     # Get the kubeconfig file of the k8s cluster
     - name: Terraform Output
