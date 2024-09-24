@@ -123,4 +123,5 @@ jobs:
       with:
         args: apply -f Kubernetes_resources
         max_attempts: 3
+        retry_on: error
 
