@@ -92,7 +92,7 @@ jobs:
     name: "deploy_app_job"
     runs-on: ubuntu-latest
     environment: production
-    needs: kubeconfig_job
+    needs: [kubeconfig_job, create_image_job]
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
