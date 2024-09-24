@@ -44,7 +44,7 @@ jobs:
 
     # Get prod-1 cluster id
     - name: Get cluster id
-      run: doctl kubernetes cluster get $K8S_CLUSTER_NAME -o json
+      run: doctl kubernetes cluster get ${{env.K8S_CLUSTER_NAME}} -o json
     
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
