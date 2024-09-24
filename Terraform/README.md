@@ -1,9 +1,19 @@
-Preqruisites:
-    1. Install Terraform CLI - Please follow https://developer.hashicorp.com/terraform/install accordingly to your distribution
-    2. Create DigitalOcean API token with all the Kubernetes scopes, please follow https://docs.digitalocean.com/reference/api/create-personal-access-token/
+## Preqruisites:
+* Install Terraform CLI - Please follow https://developer.hashicorp.com/terraform/install accordingly to your distribution
+* Create DigitalOcean API token with all the Kubernetes scopes, please follow https://docs.digitalocean.com/reference/api/create-personal-access-token/
 
-Steps:
-    1. Run "terraform init" to create the needed files 
-    2. Run "terraform plan --var-file=terraform.tfvars" and pass the DigitalOcean API token to make sure the needed changes of the cluster creation are going to be made
-    3. Run "terraform apply --var-file=terraform.tfvars" and pass the DigitalOcean API token for the k8s cluster creation
-    ** It is not recommended to save th DigitalOcean API token in the variables files**
+## Steps:
+1. Create the needed Terraform files run:
+```
+$ terraform init
+```
+2. Make sure the needed changes for the Kubernetes cluster creation are going to be made buy running the next command and **passing the DigitalOcean API token**:
+```
+$ terraform plan --var-file=terraform.tfvars
+```
+3. Apply the Kubernetes cluster creation by running the next command and **passing the DigitalOcean API token**:
+```
+$ terraform apply --var-file=terraform.tfvars
+```
+>[!WARNING]
+>It is not recommended to save th DigitalOcean API token in the variables files
