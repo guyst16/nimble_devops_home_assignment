@@ -32,6 +32,20 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
         terraform_wrapper: false
 
+    # Install doctl
+    - name: Install doctl
+      run: sudo snap install doctl
+
+    # Authenticate doctl using the DigitalOcean API token
+    - name: Authenticate with doctl
+      env:
+        DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      run: doctl auth init -t $DIGITALOCEAN_ACCESS_TOKEN
+
+    # Get prod-1 cluster id
+    - name: Get cluster id
+      run: doctl kubernetes cluster get $K8S_CLUSTER_NAME -o json | jq .[].id
+    
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
