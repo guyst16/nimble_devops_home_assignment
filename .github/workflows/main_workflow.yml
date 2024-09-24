@@ -116,7 +116,7 @@ jobs:
 
     - name: Read Kubeconfig file content and set as environment variable
       run: |
-          FILE_CONTENT=$(cat ../kubeconfig | base64)
+          FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
           echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
 
     - uses: actions-hub/kubectl@master
