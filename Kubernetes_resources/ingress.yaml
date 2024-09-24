@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "nimbleassignment.com"
+  - host: "webapp.nimbleassignment.com"
     http:
       paths:
       - pathType: Prefix
