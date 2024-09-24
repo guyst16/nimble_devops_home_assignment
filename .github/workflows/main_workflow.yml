@@ -43,6 +43,10 @@ jobs:
       run: doctl auth init -t $DIGITALOCEAN_ACCESS_TOKEN
 
     # Get prod-1 cluster id
+    - name: Get cluster id2222222222222222
+      run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq .[].id)"
+
+    # Get prod-1 cluster id
     - name: Get cluster id
       run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq .[].id)" >> $GITHUB_OUTPUT
     
