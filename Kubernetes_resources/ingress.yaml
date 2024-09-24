@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nimblewaywebapp-ingress
+  namespace: nimblewaywebapp
 spec:
   ingressClassName: nginx-example
   rules:
