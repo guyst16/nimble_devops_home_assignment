@@ -4,7 +4,7 @@ metadata:
   name: nimblewaywebapp-ingress
   namespace: nimblewaywebapp
 spec:
-  ingressClassName: nginx-example
+  ingressClassName: nginx
   rules:
   - host: "nimbleassignment.com"
     http:
