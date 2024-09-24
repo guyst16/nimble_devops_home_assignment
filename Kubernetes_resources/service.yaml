@@ -4,6 +4,7 @@ metadata:
   labels:
     app: nimblewaywebapp
   name: nimblewaywebapp
+  namespace: nimblewaywebapp
 spec:
   ports:
   - port: 443
