@@ -155,6 +155,6 @@ jobs:
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v4
       with:
-        url: http://webapp2.nimbleassignment.com/
+        url: http://webapp.nimbleassignment.com/
         max-attempts: 10
         retry-delay: 5s
