@@ -53,29 +53,21 @@ jobs:
         name: kubeconfig_file
         path: ./Terraform/kubeconfig
 
-  deploy_app:
-    name: "deploy_app"
+  create_image_job:
+    name: "create_image_job"
     runs-on: ubuntu-latest
     environment: production
-    needs: kubeconfig_job
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
-        working-directory: ./Resources
+        working-directory: ./Docker_resources
         shell: bash
 
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
-
-    # Pull the kubeconfig file for using it
-    - name: Download kubeconfig artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: kubeconfig_file
-        path: ./kubeconfig
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -96,6 +88,30 @@ jobs:
         push: true
         tags: nimblewayhomeassignment/nimblewayhomeassignment:latest
 
+  deploy_app_job:
+    name: "deploy_app_job"
+    runs-on: ubuntu-latest
+    environment: production
+    needs: kubeconfig_job
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        working-directory: ./Kubernetes_resources
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Pull the kubeconfig file for using it
+    - name: Download kubeconfig artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: kubeconfig_file
+        path: ./kubeconfig
+
     - name: Read Kubeconfig file content and set as environment variable
       run: |
           FILE_CONTENT=$(cat ./kubeconfig)
@@ -106,3 +122,4 @@ jobs:
         KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
       with:
         args: get pods -A
+
