@@ -44,13 +44,13 @@ jobs:
 
     # Get prod-1 cluster id
     - name: Get cluster id2222222222222222
-      run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq .[].id)"
+      run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq .[].id)"  >> "$GITHUB_ENV"
 
     # Get prod-1 cluster id
     - name: Get cluster id
       run: echo "cluster_id=$(doctl kubernetes cluster get ${{vars.K8S_CLUSTER_NAME}} -o json | jq .[].id)" >> $GITHUB_OUTPUT
 
-    - run: echo ${{ steps.vars.outputs }}
+    - run: echo $cluster_id
     
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
@@ -60,7 +60,7 @@ jobs:
     - name: Terraform Import
       env:
         TF_VAR_do_token: ${{ secrets.TF_API_TOKEN }}
-      run: terraform import -var-file=terraform.tfvars digitalocean_kubernetes_cluster.kubernetes-cluster-prod-1 ${{ steps.vars.outputs.cluster_id }}
+      run: terraform import -var-file=terraform.tfvars digitalocean_kubernetes_cluster.kubernetes-cluster-prod-1 $cluster_id
 
     # Get the kubeconfig file of the k8s cluster
     - name: Terraform Output
