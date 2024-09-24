@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nimblewaywebapp-ingress
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - host: "nimbleassignment.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nimblewaywebapp
+            port:
+              number: 443
