@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: nimblewaywebapp-ingress
   namespace: nimblewaywebapp
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - webapp.nimbleassignment.com
+    secretName: nimbleway-letsencrypt-secret-prod
   rules:
   - host: "webapp.nimbleassignment.com"
     http:
