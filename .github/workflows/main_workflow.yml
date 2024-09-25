@@ -135,7 +135,7 @@ jobs:
     - name: Set up kubectl
       uses: actions-hub/kubectl@master
       env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+        config: ${{ env.KUBECONFIG_CONTENT }}
 
     - name: test
       run: kubectl get ns
