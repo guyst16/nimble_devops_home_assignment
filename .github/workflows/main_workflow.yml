@@ -131,7 +131,27 @@ jobs:
           FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
           echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
 
-    # Apply namespace resource to the K8S cluster
+    # Apply Cert Manger operator to the K8S cluster - If deployed should be no changes
+    - name: Apply Cert Manger operator
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      with:
+        args: apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml   
+
+    # Apply Cert Manger cluster issuer to the K8S cluster - If deployed should be no changes
+    - name: Apply Cert Manger cluster issuer
+      uses: Wandalen/wretry.action@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      with:
+        action: actions-hub/kubectl@master
+        with: |
+          args: apply -f Cert_manager/clusterIssuer.yaml
+        attempt_limit: 10
+        attempt_delay: 5
+
+    # Apply namespace resource to the K8S cluster - If deployed should be no changes
     - name: Apply resources
       uses: actions-hub/kubectl@master
       env:
