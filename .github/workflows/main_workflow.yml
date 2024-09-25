@@ -131,49 +131,36 @@ jobs:
           FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
           echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
 
+    # Set up kubectl
+    - name: Set up kubectl
+      uses: tale/kubectl-action@v1
+      with:
+        base64-kube-config: ${{ env.KUBECONFIG_CONTENT }}
+
     # Apply Cert Manger operator to the K8S cluster - If deployed should be no changes
     - name: Apply Cert Manger operator
-      uses: actions-hub/kubectl@master
-      env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
-      with:
-        args: apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml   
+      run: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
 
     # Apply Cert Manger cluster issuer to the K8S cluster - If deployed should be no changes
     - name: Apply Cert Manger cluster issuer
-      uses: Wandalen/wretry.action@master
-      env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      uses: nick-fields/retry@v2
       with:
-        action: actions-hub/kubectl@master
-        with: |
-          args: apply -f Cert_manager/clusterIssuer.yaml
-        attempt_limit: 10
-        attempt_delay: 5
+        max_attempts: 10
+        timeout_seconds: 30
+        retry_wait_seconds: 5
+        command: kubectl apply -f Cert_manager/clusterIssuer.yaml
 
     # Apply namespace resource to the K8S cluster - If deployed should be no changes
-    - name: Apply resources
-      uses: actions-hub/kubectl@master
-      env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
-      with:
-        args: apply -f Kubernetes_resources/namespace.yaml
+    - name: Apply namespace
+      run: kubectl apply -f namespace.yaml
 
     # Apply all resources to the K8S cluster
     - name: Apply resources
-      uses: actions-hub/kubectl@master
-      env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
-      with:
-        args: apply -f Kubernetes_resources
+      run: kubectl apply -f .
 
     # Rollout deployment incase its already deployed
     - name: Rollout deployment
-      uses: actions-hub/kubectl@master
-      env:
-        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
-      with:
-        args: rollout restart deployment -n nimblewaywebapp nimblewaywebapp
+      run: kubectl rollout restart deployment -n nimblewaywebapp nimblewaywebapp
 
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v4
