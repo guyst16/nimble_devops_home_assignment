@@ -133,9 +133,9 @@ jobs:
 
     # Set up kubectl
     - name: Set up kubectl
-      uses: actions-hub/kubectl@master
-      env:
-        config: ${{ env.KUBECONFIG_CONTENT }}
+      uses: tale/kubectl-action@v1
+      with:
+        base64-kube-config: ${{ env.KUBECONFIG_CONTENT }}
 
     - name: test
       run: kubectl get ns
