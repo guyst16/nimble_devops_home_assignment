@@ -28,6 +28,6 @@ Env variables (only for collaborators):
 * Terraform - Contains the resources for the K8S cluster creation process, read about the Terroform resources [here](https://github.com/guyst16/nimbleway_devops_home_assignment/blob/main/Terraform/README.md)
 
 
-##How to
+## How to
 - To create the K8S cluster and use terraform please check [here](https://github.com/guyst16/nimbleway_devops_home_assignment/blob/main/Terraform/README.md)
 - To deploy the app just go to [here](https://github.com/guyst16/nimbleway_devops_home_assignment/actions/workflows/main_workflow.yml) and click **run workflow** or make any change in the repository to activate the CICD workflow.
