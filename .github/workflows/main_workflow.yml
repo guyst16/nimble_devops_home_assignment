@@ -152,11 +152,11 @@ jobs:
 
     # Apply namespace resource to the K8S cluster - If deployed should be no changes
     - name: Apply namespace
-      run: kubectl apply -f Kubernetes_resources/namespace.yaml
+      run: kubectl apply -f namespace.yaml
 
     # Apply all resources to the K8S cluster
     - name: Apply resources
-      run: kubectl apply -f Kubernetes_resources
+      run: kubectl apply -f .
 
     # Rollout deployment incase its already deployed
     - name: Rollout deployment
