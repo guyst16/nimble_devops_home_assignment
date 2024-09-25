@@ -131,6 +131,15 @@ jobs:
           FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
           echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
 
+    # Set up kubectl
+    - name: Set up kubectl
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+
+    - name: test
+      run: kubectl get ns
+
     # Apply Cert Manger operator to the K8S cluster - If deployed should be no changes
     - name: Apply Cert Manger operator
       uses: actions-hub/kubectl@master
