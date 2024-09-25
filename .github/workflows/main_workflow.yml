@@ -131,6 +131,13 @@ jobs:
           FILE_CONTENT=$(cat ../kubeconfig | base64 -w0)
           echo "KUBECONFIG_CONTENT=$FILE_CONTENT" >> $GITHUB_ENV
 
+    # Apply namespace resource to the K8S cluster
+    - name: Apply resources
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
+      with:
+        args: apply -f Kubernetes_resources/namespace.yaml
 
     # Apply all resources to the K8S cluster
     - name: Apply resources
@@ -139,8 +146,6 @@ jobs:
         KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
       with:
         args: apply -f Kubernetes_resources
-        max_attempts: 3
-        retry_on: error
 
     # Rollout deployment incase its already deployed
     - name: Rollout deployment
@@ -149,8 +154,6 @@ jobs:
         KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
       with:
         args: rollout restart deployment -n nimblewaywebapp nimblewaywebapp
-        max_attempts: 3
-        retry_on: error
 
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v4
