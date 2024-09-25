@@ -141,11 +141,15 @@ jobs:
 
     # Apply Cert Manger cluster issuer to the K8S cluster - If deployed should be no changes
     - name: Apply Cert Manger cluster issuer
-      uses: actions-hub/kubectl@master
+      uses: Wandalen/wretry.action@1.2.0
       env:
         KUBE_CONFIG: ${{ env.KUBECONFIG_CONTENT }}
       with:
-        args: apply -f Cert_manager/clusterIssuer.yaml
+        action: actions-hub/kubectl@master
+        with: |
+          args: apply -f Cert_manager/clusterIssuer.yaml
+        attempt_limit: 10
+        attempt_delay: 5
 
     # Apply namespace resource to the K8S cluster - If deployed should be no changes
     - name: Apply resources
