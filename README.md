@@ -11,11 +11,11 @@
 This project helps to create a K8S cluster over DigitalOcean cloud using terraform, about the components:
 * K8S cluster with horizontal scaling, min: 2 and max: 5.
 * Nginx controller and DigitialOcean loadbalancer for ingress connections
-* "webapp.nimbleassignment.com" subdomain record for the app which points to the loadbalancer IP.
+* "app.nimbleassignment.com" subdomain record for the app which points to the loadbalancer IP.
 
 ### Github Actions
 The CICD creates the docker image, pushes it to the [repository](https://hub.docker.com/r/nimblewayhomeassignment/nimblewayhomeassignment/tags) and deploys it over the mentioned K8S cluster, about the components:
-* Ingress for the subdomain "webapp.nimbleassignment.com" to the app
+* Ingress for the subdomain "app.nimbleassignment.com" to the app
 * Wep app deployment
 * Web app service
 * Web app namespace
