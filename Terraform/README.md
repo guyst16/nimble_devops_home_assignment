@@ -1,6 +1,6 @@
 ## Preqruisites:
 * Install Terraform CLI - Please follow https://developer.hashicorp.com/terraform/install accordingly to your distribution
-* Create DigitalOcean API token with all the Kubernetes scopes, please follow https://docs.digitalocean.com/reference/api/create-personal-access-token/
+* Create DigitalOcean API token with all the Kubernetes scopes and put it under the `TF_API_TOKEN` secret, please follow https://docs.digitalocean.com/reference/api/create-personal-access-token/
 
 ## Steps:
 1. Create the needed Terraform files run:
