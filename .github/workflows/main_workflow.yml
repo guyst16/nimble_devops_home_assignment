@@ -175,7 +175,7 @@ jobs:
       run: kubectl rollout restart deployment -n nimblewaywebapp nimblewaywebapp
 
     - name: Setup curl
-      uses: kordlib/setup-curl@v1.0.0
+      run: sudo snap install curl
 
     - name: Check the deployed service URL
       uses: nick-fields/retry@v2
