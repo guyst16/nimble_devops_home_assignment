@@ -24,4 +24,4 @@ helm-ingress-nginx = {
 
 web-app-domain = "nimbleassignment.com"
 
-web-app-record = "webapp"
+web-app-record = "app"

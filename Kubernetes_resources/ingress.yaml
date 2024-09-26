@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - webapp.nimbleassignment.com
+    - app.nimbleassignment.com
     secretName: nimbleway-letsencrypt-secret-prod
   rules:
-  - host: "webapp.nimbleassignment.com"
+  - host: "app.nimbleassignment.com"
     http:
       paths:
       - pathType: Prefix
