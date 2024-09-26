@@ -160,7 +160,7 @@ jobs:
 
     # Apply Cert Manger cluster issuer to the K8S cluster - If deployed should be no changes
     - name: Apply Cert Manger cluster issuer
-      run: kubectl apply -f Cert_manager/clusterIssuer.yaml
+      run: kubectl apply -f ../Cert_manager/clusterIssuer.yaml
 
     # Apply namespace resource to the K8S cluster - If deployed should be no changes
     - name: Apply namespace
@@ -177,6 +177,6 @@ jobs:
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v4
       with:
-        url: http://webapp.nimbleassignment.com/
+        url: https://webapp.nimbleassignment.com/
         max-attempts: 10
         retry-delay: 5s
